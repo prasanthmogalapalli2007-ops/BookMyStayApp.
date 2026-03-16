@@ -1,14 +1,26 @@
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * =============================================================
+ * MAIN CLASS – BookMyStayApp
+ * =============================================================
+ *
+ * Description:
+ * This class demonstrates how a guest can view available rooms
+ * without modifying the inventory data. The system enforces
+ * read-only access while searching room availability.
+ */
+
 public class BookMyStayApp {
 
-    // RoomInventory class inside the same file
+    /* ===============================
+       CENTRALIZED ROOM INVENTORY
+       =============================== */
     static class RoomInventory {
 
         private Map<String, Integer> roomAvailability;
 
-        // initialize inventory
         public RoomInventory() {
 
             roomAvailability = new HashMap<>();
@@ -18,38 +30,49 @@ public class BookMyStayApp {
             roomAvailability.put("Suite Room", 2);
         }
 
-        // return room availability
         public Map<String, Integer> getRoomAvailability() {
             return roomAvailability;
         }
+    }
 
-        // update availability
-        public void updateAvailability(String roomType, int count) {
-            roomAvailability.put(roomType, count);
+    /* ===============================
+       ROOM SEARCH SERVICE
+       =============================== */
+    static class RoomSearchService {
+
+        public void searchAvailableRooms(RoomInventory inventory) {
+
+            Map<String, Integer> availability =
+                    inventory.getRoomAvailability();
+
+            if (availability.get("Single Room") > 0) {
+                System.out.println("Single Room available: "
+                        + availability.get("Single Room"));
+            }
+
+            if (availability.get("Double Room") > 0) {
+                System.out.println("Double Room available: "
+                        + availability.get("Double Room"));
+            }
+
+            if (availability.get("Suite Room") > 0) {
+                System.out.println("Suite Room available: "
+                        + availability.get("Suite Room"));
+            }
         }
     }
 
-    // main method
+    /* ===============================
+       APPLICATION ENTRY POINT
+       =============================== */
     public static void main(String[] args) {
 
         RoomInventory inventory = new RoomInventory();
 
-        System.out.println("Room Inventory:\n");
+        RoomSearchService searchService = new RoomSearchService();
 
-        for (Map.Entry<String, Integer> entry :
-                inventory.getRoomAvailability().entrySet()) {
+        System.out.println("Searching available rooms...\n");
 
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-
-        System.out.println("\nUpdating Single Room availability...\n");
-
-        inventory.updateAvailability("Single Room", 4);
-
-        for (Map.Entry<String, Integer> entry :
-                inventory.getRoomAvailability().entrySet()) {
-
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
+        searchService.searchAvailableRooms(inventory);
     }
 }
