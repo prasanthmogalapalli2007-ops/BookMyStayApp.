@@ -1,78 +1,77 @@
-/**
- * =============================================================
- * MAIN CLASS – BookMyStayApp
- * =============================================================
- *
- * Use Case 2: Basic Room Types & Static Availability
- *
- * @version 2.1
- */
+import java.util.LinkedList;
+import java.util.Queue;
 
-abstract class Room {
+// Reservation class representing a booking request
+class Reservation {
 
-    protected int numberOfBeds;
-    protected int squareFeet;
-    protected double pricePerNight;
+    private String guestName;
+    private String roomType;
 
-    public Room(int numberOfBeds, int squareFeet, double pricePerNight) {
-        this.numberOfBeds = numberOfBeds;
-        this.squareFeet = squareFeet;
-        this.pricePerNight = pricePerNight;
+    public Reservation(String guestName, String roomType) {
+        this.guestName = guestName;
+        this.roomType = roomType;
     }
 
-    public void displayRoomDetails() {
-        System.out.println("Beds: " + numberOfBeds);
-        System.out.println("Size: " + squareFeet + " sqft");
-        System.out.println("Price per night: " + pricePerNight);
+    public String getGuestName() {
+        return guestName;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void displayReservation() {
+        System.out.println("Guest: " + guestName + " | Requested Room: " + roomType);
     }
 }
 
-class SingleRoom extends Room {
+// Booking Request Queue
+class BookingRequestQueue {
 
-    public SingleRoom() {
-        super(1, 250, 1500.0);
+    private Queue<Reservation> requestQueue;
+
+    public BookingRequestQueue() {
+        requestQueue = new LinkedList<>();
+    }
+
+    // Add booking request to queue
+    public void addRequest(Reservation reservation) {
+        requestQueue.add(reservation);
+        System.out.println("Booking request added for " + reservation.getGuestName());
+    }
+
+    // Display all requests in queue
+    public void displayRequests() {
+        System.out.println("\n=== Current Booking Requests (FIFO Order) ===");
+
+        for (Reservation r : requestQueue) {
+            r.displayReservation();
+        }
     }
 }
 
-class DoubleRoom extends Room {
-
-    public DoubleRoom() {
-        super(2, 400, 2500.0);
-    }
-}
-
-class SuiteRoom extends Room {
-
-    public SuiteRoom() {
-        super(3, 750, 5000.0);
-    }
-}
-
+// Main Application
 public class BookMyStayApp {
 
     public static void main(String[] args) {
 
-        System.out.println("Hotel Room Initialization\n");
+        System.out.println("=== Book My Stay App - Booking Request System ===");
 
-        Room singleRoom = new SingleRoom();
-        Room doubleRoom = new DoubleRoom();
-        Room suiteRoom = new SuiteRoom();
+        BookingRequestQueue bookingQueue = new BookingRequestQueue();
 
-        int singleAvailable = 5;
-        int doubleAvailable = 3;
-        int suiteAvailable = 2;
+        // Guests submit booking requests
+        Reservation r1 = new Reservation("Alice", "Single Room");
+        Reservation r2 = new Reservation("Bob", "Double Room");
+        Reservation r3 = new Reservation("Charlie", "Suite Room");
 
-        System.out.println("Single Room:");
-        singleRoom.displayRoomDetails();
-        System.out.println("Available: " + singleAvailable);
-        System.out.println();
-        System.out.println("Double Room:");
-        doubleRoom.displayRoomDetails();
-        System.out.println("Available: " + doubleAvailable);
-        System.out.println();
+        bookingQueue.addRequest(r1);
+        bookingQueue.addRequest(r2);
+        bookingQueue.addRequest(r3);
 
-        System.out.println("Suite Room:");
-        suiteRoom.displayRoomDetails();
-        System.out.println("Available: " + suiteAvailable);
+        // Display queue (arrival order)
+        bookingQueue.displayRequests();
+
+        System.out.println("\nRequests will be processed in the same order they arrived.");
+        System.out.println("=== End of Application ===");
     }
 }
